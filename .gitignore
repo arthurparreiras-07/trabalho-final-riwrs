@@ -1,0 +1,15 @@
+# Ambiente virtual Python
+.venv/
+
+# Cache de bytecode Python
+__pycache__/
+*.pyc
+
+# Corpus de dados (baixado externamente, ver README)
+Fake.br-Corpus/
+
+# Saídas geradas pela execução do script (regeneráveis via experimento_fakenews.py)
+resultados/
+
+# Arquivos de sistema
+.DS_Store
