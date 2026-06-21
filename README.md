@@ -5,9 +5,17 @@ língua portuguesa: uma abordagem baseada em recuperação de informação e
 aprendizado de máquina" (Trabalho final — Recuperação de Informação na Web e
 Redes Sociais, PUC Minas).
 
-Para a fundamentação teórica, trabalhos relacionados e discussão dos
-resultados, consulte o artigo (`artigo_fakenews.pdf`). Este README cobre
-apenas como reproduzir o experimento.
+## Grupo
+
+- Disciplina: Recuperação de Informação na Web e Redes Sociais
+- Professora: Jeanne Louize Emygdio
+- Grupo 3:
+  - Ana Julia Ferreira Soares
+  - Arthur Felipe Parreiras
+  - Bruno Maciel dos Santos
+  - Guilherme Saliba Moreira de Oliveira
+  - Tiago Rafael Martins Cardoso
+  - Victoria Gonçalves da Silva
 
 ## Estrutura do projeto
 
@@ -47,6 +55,41 @@ source .venv/bin/activate
 python experimento_fakenews.py
 ```
 
-O script imprime as métricas no terminal e gera/sobrescreve os arquivos
-`resultados.csv`, `metricas.json`, `grafico_comparacao.png` e
-`grafico_matriz.png` dentro da pasta `resultados/`.
+## Como o script funciona
+
+O `experimento_fakenews.py` executa o pipeline do experimento em sequência:
+
+1. **Carregamento dos dados**: lê `Fake.br-Corpus/preprocessed/pre-processed.csv`
+   e descarta linhas sem texto.
+2. **Divisão treino/teste**: separa 70% para treino e 30% para teste, de
+   forma estratificada (mantendo a proporção de notícias verdadeiras/falsas).
+3. **Vetorização TF-IDF**: transforma os textos em vetores numéricos
+   (unigramas e bigramas), ajustando o vetorizador apenas no conjunto de
+   treino e aplicando-o ao teste.
+4. **Treino e avaliação**: treina quatro classificadores (Naive Bayes,
+   Regressão Logística, SVM Linear e Random Forest) sobre a mesma
+   representação TF-IDF, calculando acurácia, precisão, recall, F1-score e
+   validação cruzada (5-fold) para cada um.
+5. **Seleção do melhor modelo**: ordena os classificadores pelo F1-score e
+   gera a matriz de confusão do melhor.
+6. **Geração de saídas**: salva métricas e gráficos na pasta `resultados/`.
+
+## Output gerado
+
+Durante a execução, o script imprime no terminal: contagem de notícias por
+classe, estatísticas de tamanho dos textos, dimensão da matriz TF-IDF,
+métricas de cada classificador e o relatório de classificação do melhor
+modelo.
+
+Ao final, são gerados/sobrescritos os seguintes arquivos em `resultados/`:
+
+- **`resultados.csv`** — tabela com as métricas (acurácia, precisão, recall,
+  F1, média/desvio da validação cruzada e tempo de treino) de cada
+  classificador, ordenada pelo F1-score.
+- **`metricas.json`** — as mesmas métricas em formato JSON, acrescidas do
+  nome do melhor modelo, da matriz de confusão, do tamanho do vocabulário e
+  do tamanho dos conjuntos de treino/teste.
+- **`grafico_comparacao.png`** — gráfico de barras comparando acurácia e
+  F1-score entre os quatro classificadores.
+- **`grafico_matriz.png`** — matriz de confusão (verdadeira x falsa) do
+  melhor modelo.
