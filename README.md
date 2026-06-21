@@ -22,6 +22,8 @@ Redes Sociais, PUC Minas).
 ```
 experimento_fakenews.py     # script principal do experimento
 requirements.txt               # dependências Python (equivalente ao package.json)
+requirements-dev.txt          # dependências de desenvolvimento (lint)
+pyproject.toml                  # configuração do Ruff (linter)
 setup.sh                          # instala o ambiente virtual e as dependências
 Fake.br-Corpus/              # corpus de dados (não versionado neste repo)
 resultados/                     # saídas geradas pela execução do script
@@ -53,6 +55,15 @@ Repositório oficial: https://github.com/roneysco/Fake.br-Corpus
 ./setup.sh                 # cria o ambiente virtual e instala requirements.txt
 source .venv/bin/activate
 python experimento_fakenews.py
+```
+
+## Lint
+
+O projeto usa o [Ruff](https://docs.astral.sh/ruff/) como linter.
+
+```bash
+.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/ruff check .
 ```
 
 ## Como o script funciona

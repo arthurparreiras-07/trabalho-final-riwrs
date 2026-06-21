@@ -4,21 +4,30 @@ Detecção de Fake News em português (corpus Fake.Br)
 Pipeline: TF-IDF + classificadores supervisionados.
 Disciplina: Recuperação de Informação na Web e Redes Sociais - PUC Minas
 """
-import os, time, json
+import json
+import os
+import time
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
-from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import LinearSVC
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import (accuracy_score, precision_score, recall_score,
-                             f1_score, confusion_matrix, classification_report)
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+)
+from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.svm import LinearSVC
 
 RND = 42
 DIR_RESULTADOS = "resultados"
@@ -131,27 +140,35 @@ x = np.arange(len(res_df))
 w = 0.38
 ax.bar(x - w/2, res_df["Acuracia"], w, label="Acurácia", color="#1f5c8b")
 ax.bar(x + w/2, res_df["F1"], w, label="F1-score", color="#7bb0d6")
-ax.set_xticks(x); ax.set_xticklabels(res_df["Modelo"], rotation=12)
-ax.set_ylim(0.6, 1.02); ax.set_ylabel("Pontuação")
+ax.set_xticks(x)
+ax.set_xticklabels(res_df["Modelo"], rotation=12)
+ax.set_ylim(0.6, 1.02)
+ax.set_ylabel("Pontuação")
 ax.set_title("Desempenho dos classificadores (conjunto de teste)")
-ax.legend(loc="lower left"); ax.grid(axis="y", alpha=0.3)
+ax.legend(loc="lower left")
+ax.grid(axis="y", alpha=0.3)
 for i, (a, f1) in enumerate(zip(res_df["Acuracia"], res_df["F1"])):
     ax.text(i - w/2, a + 0.005, f"{a:.3f}", ha="center", fontsize=8)
     ax.text(i + w/2, f1 + 0.005, f"{f1:.3f}", ha="center", fontsize=8)
-plt.tight_layout(); plt.savefig(os.path.join(DIR_RESULTADOS, "grafico_comparacao.png"), dpi=150)
+plt.tight_layout()
+plt.savefig(os.path.join(DIR_RESULTADOS, "grafico_comparacao.png"), dpi=150)
 
 # 5b. matriz de confusão do melhor
 fig, ax = plt.subplots(figsize=(4.5, 4))
 im = ax.imshow(cm, cmap="Blues")
-ax.set_xticks([0, 1]); ax.set_yticks([0, 1])
-ax.set_xticklabels(["Verdadeira", "Falsa"]); ax.set_yticklabels(["Verdadeira", "Falsa"])
-ax.set_xlabel("Previsto"); ax.set_ylabel("Real")
+ax.set_xticks([0, 1])
+ax.set_yticks([0, 1])
+ax.set_xticklabels(["Verdadeira", "Falsa"])
+ax.set_yticklabels(["Verdadeira", "Falsa"])
+ax.set_xlabel("Previsto")
+ax.set_ylabel("Real")
 ax.set_title(f"Matriz de confusão – {melhor_nome}")
 for i in range(2):
     for j in range(2):
         ax.text(j, i, cm[i, j], ha="center", va="center",
                 color="white" if cm[i, j] > cm.max()/2 else "black", fontsize=14)
-plt.tight_layout(); plt.savefig(os.path.join(DIR_RESULTADOS, "grafico_matriz.png"), dpi=150)
+plt.tight_layout()
+plt.savefig(os.path.join(DIR_RESULTADOS, "grafico_matriz.png"), dpi=150)
 
 print(f"\nArquivos gerados em '{DIR_RESULTADOS}/': resultados.csv, metricas.json, "
       "grafico_comparacao.png, grafico_matriz.png")
